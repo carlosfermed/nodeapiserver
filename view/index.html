@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Principal</title>
+        <style>
+            body {
+                text-align: center;
+            }
+
+            button {
+                margin: 30px;
+                color: blue;
+                border: 2px solid blue;
+                border-radius: 3px;
+                padding: 6px;
+            }
+
+            #botonEliminar {
+                display: block;
+                margin: auto;
+                color: red;
+            }
+
+            form {
+                color: brown;
+            }
+
+            fieldset {
+                border-radius: 5px;
+                width: 400px;
+                display: block;
+                margin: auto;
+            }
+
+            #div-eliminar {
+                width: 100px;
+                display: block;
+                margin: auto;
+                margin-bottom: 10px;
+            }
+
+            #inputEliminar {
+                width: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Gestión de Películas</h1>
+            <form id="movieForm">
+                <fieldset>
+                    <legend>Información de la Película</legend>
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="titulo" required><br><br>
+
+                    <label for="director">Director:</label>
+                    <input type="text" id="director" name="director" required><br><br>
+
+                    <label for="duracion">Año:</label>
+                    <input type="number" id="anio" name="anio" required><br><br>
+
+                </fieldset>
+                <button type="submit" title="Introduce los datos de la película y pulsa para guardarlos.">Guardar Película</button>
+            </form>
+
+            <div id="div-eliminar">            
+                <button id="botonEliminar" title="Introduce el título de la película y pulsa el botón para eliminarla del registro.">Eliminar Película</button>
+            </div>   
+            <br>
+            <a href="http://localhost:3000/peliculas">Ver listado de películas</a>
+    </body>
+    <script>
+
+        document.getElementById("movieForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Obtiene los valores del formulario para que puedan ser enviados en la petición. 
+            const titulo = document.getElementById("titulo").value;
+            const director = document.getElementById("director").value;
+            const anio = document.getElementById("anio").value;
+
+            // Envía los datos a la API mediante parámetros query.
+            fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
+                method: "POST"                          // Se introduce como parámetro un objeto que describe el tipo de método http.
+            })
+                .then(async (response) => {
+                    let data = await response.json();   // Se gestiona la respuesta como json.
+                    alert(data.message);                // Se usa el atributo message del objeto enviado como respuesta.
+                })                                      
+                .catch(error => {
+                    console.error("Error al enviar los datos:", error);
+                });
+        });
+
+        document.getElementById("botonEliminar").addEventListener("click", () => {
+
+            // Obtiene los valores del formulario.
+            const tituloEliminar = document.getElementById("titulo").value;
+
+            // Envía los datos a la API mediante parámetros de ruta.
+            fetch("http://localhost:3000/peliculas/" + tituloEliminar, {
+                method: "DELETE"                        // Se introduce como parámetro un objeto que describe el tipo de método http.
+            })
+                .then(res => res.text())                // Se gestiona la respuesta como texto plano.
+                .then(data => {
+                    alert(data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });        
+    </script>
+</html>
