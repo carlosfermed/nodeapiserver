@@ -1,24 +1,27 @@
 const http = require("node:http");
-const {servirPagina, agregarPelicula, eliminarPelicula} = require("../controllers"); 
+const { servirPaginaAdministrador, agregarPelicula, modificarPelicula, eliminarPelicula } = require("../controllers");
 
-const PORT = 3000;
+const PORT = process.env.PORT ?? 3000;
 
 http.createServer((req, res) => {
-    const {method} = req;
+  const { method } = req;
 
-    switch (method) {
-        case 'GET':
-            servirPagina(req, res);
-            break;
-        case 'POST':
-            agregarPelicula(req, res);  
-            break;
-        case 'DELETE':
-            eliminarPelicula(req, res); 
-            break;
-        default:
-            res.setHeader("content-type", "text/html; charset=utf-8");
-            res.statusCode = 404;
-            res.end("Error 404 not found");
-    }         
-}).listen(PORT, () => console.log(`servidor a la escucha en puerto ${PORT}`));
+  switch (method) {
+    case 'GET':
+      servirPaginaAdministrador(req, res);
+      break;
+    case 'POST':
+      agregarPelicula(req, res);
+      break;
+    case 'PATCH':
+      modificarPelicula(req, res);
+      break;
+    case 'DELETE':
+      eliminarPelicula(req, res);
+      break;
+    default:
+      res.setHeader("content-type", "text/html; charset=utf-8");
+      res.statusCode = 404;
+      res.end("Error 404 not found");
+  }
+}).listen(PORT, () => console.log(`Servidor en puerto ${PORT} a la escucha...`));

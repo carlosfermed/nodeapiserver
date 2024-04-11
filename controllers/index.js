@@ -1,12 +1,14 @@
 
-// Barrel pattern ->  Permite importar varios archivos desde un solo punto, en nuestro caso desde index.js
+// Barrel pattern ->  Permite importar varios archivos desde un solo punto.
 
 const agregarPelicula = require("./agregarPelicula");
 const eliminarPelicula = require("./eliminarPelicula");
-const servirPagina = require("./servirPagina");
+const modificarPelicula = require("./modificarPelicula");
+const servirPaginaAdministrador = require("./servirPaginaAdministrador");
 
 module.exports = {
     agregarPelicula,
+    modificarPelicula,
     eliminarPelicula,
-    servirPagina
+    servirPaginaAdministrador,
 }

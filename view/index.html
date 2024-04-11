@@ -1,114 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Principal</title>
-        <style>
-            body {
-                text-align: center;
-            }
 
-            button {
-                margin: 30px;
-                color: blue;
-                border: 2px solid blue;
-                border-radius: 3px;
-                padding: 6px;
-            }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nodeapiserver</title>
+  <style>
+    body {
+      text-align: center;
+    }
+    button {
+      margin: 15px;
+      color: blue;
+      border: 2px solid blue;
+      border-radius: 3px;
+      padding: 6px;
+    }
+    #botonEliminar {
+      color: red;
+    }
+    form {
+      color: brown;
+    }
+    fieldset {
+      border-radius: 5px;
+      width: 400px;
+      display: block;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+    #inputEliminar {
+      width: 40px;
+    }
+    .left {
+      float: left;
+      margin-left: 20px;
+    }
+    .right {
+      float: right;
+      margin-right: 10px;
+    }
+    #verListado {
+      margin-top: 20px;
+    }
+  </style>
+</head>
 
-            #botonEliminar {
-                display: block;
-                margin: auto;
-                color: red;
-            }
+<body>
+  <h1>Administrador de Películas</h1>
+  <form id="movieForm">
 
-            form {
-                color: brown;
-            }
+    <fieldset>
+      <legend>Información de la Película</legend>
+      <label for="titulo" class="left">Título:</label>
+      <input type="text" id="titulo" name="titulo" class="right" required><br><br>
 
-            fieldset {
-                border-radius: 5px;
-                width: 400px;
-                display: block;
-                margin: auto;
-            }
+      <label for="director" class="left">Director:</label>
+      <input type="text" id="director" name="director" class="right" required><br><br>
 
-            #div-eliminar {
-                width: 100px;
-                display: block;
-                margin: auto;
-                margin-bottom: 10px;
-            }
+      <label for="anio" class="left">Año:</label>
+      <input type="number" id="anio" name="anio" class="right" required><br><br>
+    </fieldset>
 
-            #inputEliminar {
-                width: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Gestión de Películas</h1>
-            <form id="movieForm">
-                <fieldset>
-                    <legend>Información de la Película</legend>
-                    <label for="titulo">Título:</label>
-                    <input type="text" id="titulo" name="titulo" required><br><br>
+    <button type="submit" title="Introduce los datos de la película y pulsa para guardarlos.">Guardar
+      Película</button>
+    
+  </form>
+  <button id="botonModificar" title="Introduce el título de la película y modifica el registro.">Modificar
+    Película</button>
+  <button id="botonEliminar" title="Introduce el título de la película y pulsa el botón para eliminarla.">Eliminar
+    Película</button>
+  <br>
+  <div id="verListado">
+    <a href="http://localhost:3000/peliculas">Ver listado de películas</a>
+  </div>
+</body>
+<script>
 
-                    <label for="director">Director:</label>
-                    <input type="text" id="director" name="director" required><br><br>
+  document.getElementById("movieForm").addEventListener("submit", async function (e) {
+    e.preventDefault();                                   //--> Evita el comportamiento por defecto que provocaría el envío automático del formulario.
 
-                    <label for="duracion">Año:</label>
-                    <input type="number" id="anio" name="anio" required><br><br>
+    // Recupera los valores del formulario. 
+    const titulo = document.getElementById("titulo").value;
+    const director = document.getElementById("director").value;
+    const anio = document.getElementById("anio").value;
 
-                </fieldset>
-                <button type="submit" title="Introduce los datos de la película y pulsa para guardarlos.">Guardar Película</button>
-            </form>
+    try {
+      // Envía los datos a la API mediante parámetros query de forma asíncrona.
+      // La respuesta se gestiona mediante async/await.
+      const response = await fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
+        method: "POST"                                    //--> Parámetro que define el tipo de método http usado.
+      })
+      const data = await response.json()                  //--> Se gestiona la respuesta en formato json.
+      alert(data.message);                                //--> Se usa el atributo 'message' del objeto enviado como respuesta.
 
-            <div id="div-eliminar">            
-                <button id="botonEliminar" title="Introduce el título de la película y pulsa el botón para eliminarla del registro.">Eliminar Película</button>
-            </div>   
-            <br>
-            <a href="http://localhost:3000/peliculas">Ver listado de películas</a>
-    </body>
-    <script>
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+    }
+  });
 
-        document.getElementById("movieForm").addEventListener("submit", function (e) {
-            e.preventDefault();
+  document.getElementById("botonModificar").addEventListener("click", async function () {
+    // Recupera los valores del formulario. 
+    const titulo = document.getElementById("titulo").value;
+    const director = document.getElementById("director").value;
+    const anio = document.getElementById("anio").value;
 
-            // Obtiene los valores del formulario para que puedan ser enviados en la petición. 
-            const titulo = document.getElementById("titulo").value;
-            const director = document.getElementById("director").value;
-            const anio = document.getElementById("anio").value;
+    try {
+      const response = await fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
+        method: "PATCH"                                    //--> Parámetro que define el tipo de método http usado.
+      })
+      const data = await response.json()             
+      alert(data.message);                                 
 
-            // Envía los datos a la API mediante parámetros query.
-            fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
-                method: "POST"                          // Se introduce como parámetro un objeto que describe el tipo de método http.
-            })
-                .then(async (response) => {
-                    let data = await response.json();   // Se gestiona la respuesta como json.
-                    alert(data.message);                // Se usa el atributo message del objeto enviado como respuesta.
-                })                                      
-                .catch(error => {
-                    console.error("Error al enviar los datos:", error);
-                });
-        });
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+    }
+  });
 
-        document.getElementById("botonEliminar").addEventListener("click", () => {
+  document.getElementById("botonEliminar").addEventListener("click", () => {
 
-            // Obtiene los valores del formulario.
-            const tituloEliminar = document.getElementById("titulo").value;
+    // Recupera el valor título del formulario.
+    const tituloEliminar = document.getElementById("titulo").value;
 
-            // Envía los datos a la API mediante parámetros de ruta.
-            fetch("http://localhost:3000/peliculas/" + tituloEliminar, {
-                method: "DELETE"                        // Se introduce como parámetro un objeto que describe el tipo de método http.
-            })
-                .then(res => res.text())                // Se gestiona la respuesta como texto plano.
-                .then(data => {
-                    alert(data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });        
-    </script>
+    // Envía los datos a la API mediante parámetros de ruta.
+    // La respuesta se gestiona mediante programación basada en promesas.
+    fetch("http://localhost:3000/peliculas/" + tituloEliminar, {
+      method: "DELETE"                                      //--> Parámetro que define el tipo de método http usado.
+    })
+      .then(res => res.text())                              //--> Se gestiona la respuesta como texto plano.
+      .then(data => { alert(data) })
+      .catch(error => { console.error(error) });
+  });       
+
+</script>
 </html>

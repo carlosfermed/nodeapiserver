@@ -3,7 +3,7 @@ const fs = require("node:fs");
 
 const servirPagina = (req, res) => {
 
-    if (req.url === '/') { 
+    if (req.url === '/view') { 
         fs.readFile("./view/index.html", "utf-8", (err, data) => {
             if (err) 
                 console.log('err :>> ', err);

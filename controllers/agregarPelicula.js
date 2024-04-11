@@ -1,11 +1,12 @@
 const peliculas = require("../data/peliculas");
 const {comprobarDatos} = require("../plugins/comprobarDatos");
 
-let idPeliculas = peliculas.length;                             // Se inicializa el id para el siguiente valor de id del objeto nuevaPelicula.               
+let idPeliculas = peliculas.length;                             // Se inicializa el id para tener listo el valor en la siguiente película introducida.               
 
 const agregarPelicula = (req, res) => {
 
     const url = new URL(req.url, `http://${req.rawHeaders[1]}`);
+
     if (url.pathname === '/peliculas') {
         try {
             const titulo = url.searchParams.get("titulo");      // Se recupera el título envíado desde el cliente
@@ -25,7 +26,7 @@ const agregarPelicula = (req, res) => {
             }      
             else {
                 res.setHeader("content-type", "application/json; charset=utf-8");  
-                res.end(JSON.stringify({message: "Algún dato sobre la película es incorrecto o está incompleto."}));
+                res.end(JSON.stringify({message: "Algún dato sobre la película es incorrecto."}));
             }      
         }
         catch (err) {
