@@ -5,13 +5,13 @@ const { comprobarDatos } = require("../plugins/comprobarDatos");
 
 const modificarPelicula = (req, res) => {
 
-  const url = new URL(req.url, `http://${req.rawHeaders[1]}`);
+  const url = new URL(req.url, `http://${req.rawHeaders[1]}`);  // Usamos los parámetros query.
 
   if (url.pathname === '/peliculas') {
     try {
-      const titulo = url.searchParams.get("titulo");      // Se recupera el título envíado desde el cliente.
-      const director = url.searchParams.get("director");  // Se recupera el director envíado desde el cliente.
-      const anio = url.searchParams.get("anio");          // Se recupera el año envíado desde el cliente.
+      const titulo = url.searchParams.get("titulo");            // Se recupera el título envíado desde el cliente.
+      const director = url.searchParams.get("director");        // Se recupera el director envíado desde el cliente.
+      const anio = url.searchParams.get("anio");                // Se recupera el año envíado desde el cliente.
 
       if (comprobarDatos(titulo, director, anio)) {
         

@@ -5,7 +5,7 @@ const {comprobarTituloPelicula} = require("../plugins/comprobarDatos");
 const eliminarPelicula = (req, res) => {
 
     const url = new URL(req.url, `http://${req.rawHeaders[1]}`);
-    const {dir: ruta, name: titulo} = path.parse(url.pathname);
+    const {dir: ruta, name: titulo} = path.parse(url.pathname); // Recuperamos datos a partir de los parámetros de ruta.
 
     const tituloDecodificado = decodeURIComponent(titulo);      // En caso de que el título conste de varias palabras.
 
@@ -21,7 +21,7 @@ const eliminarPelicula = (req, res) => {
         else {
             res.setHeader("content-type", "text/plain; charset=utf-8");  
             res.statusCode = 404;
-            res.end("Película no encontrada, asegúrese de escribir bien el título.");
+            res.end("Película no encontrada, revisa el título.");
         }          
     }
     else {
