@@ -1,6 +1,5 @@
-
 const peliculas = require("../data/peliculas");
-const { comprobarDatos } = require("../plugins/comprobarDatos");
+const comprobarDatos = require("../plugins/comprobarDatos");
 
 
 const modificarPelicula = (req, res) => {
@@ -21,21 +20,27 @@ const modificarPelicula = (req, res) => {
           pelicula.director = director;
           pelicula.anio = anio;
 
+          res.statusCode = 200;                                 // OK.
           res.setHeader("content-type", "application/json; charset=utf-8");
           res.end(JSON.stringify({ message: "Película modificada." }));
         }
         else {
+          res.statusCode = 404;                                 // No encontrado.
           res.setHeader("content-type", "application/json; charset=utf-8");
           res.end(JSON.stringify({ message: "No se encontró la película." }));
         }
       }
       else {
+        res.statusCode = 400;                                   // Solicitud incorrecta.
         res.setHeader("content-type", "application/json; charset=utf-8");
         res.end(JSON.stringify({ message: "Datos incorrectos." }));
       }
     }
     catch (err) {
       console.log('err :>> ', err);
+      res.statusCode = 500;                                     // Error interno del servidor.
+      res.setHeader("content-type", "application/json; charset=utf-8");
+      res.end(JSON.stringify({ message: "Error interno del servidor." }));
     }
   }
 }

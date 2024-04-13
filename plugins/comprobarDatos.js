@@ -13,12 +13,4 @@ const comprobarDatos = (titulo, director, anio) => {
     return false;
 }
 
-const comprobarTituloPelicula = (tituloPelicula) => {
-  if (tituloPelicula !== null && tituloPelicula !== undefined) return true;
-  else return false;
-}
-
-module.exports = {
-  comprobarDatos,
-  comprobarTituloPelicula
-}
+module.exports = comprobarDatos;

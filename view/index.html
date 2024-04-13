@@ -107,10 +107,10 @@
 
     try {
       const response = await fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
-        method: "PATCH"                                    //--> Parámetro que define el tipo de método http usado.
+        method: "PUT"                                     //--> Parámetro que define el tipo de método http usado.
       })
-      const data = await response.json()             
-      alert(data.message);                                 
+      const data = await response.json()                  //--> Se gestiona la respuesta en formato json.       
+      alert(data.message);                                //--> Se usa el atributo 'message' del objeto enviado como respuesta.      
 
     } catch (error) {
       console.error("Error al enviar los datos:", error);
@@ -118,16 +118,15 @@
   });
 
   document.getElementById("botonEliminar").addEventListener("click", () => {
-
     // Recupera el valor título del formulario.
     const tituloEliminar = document.getElementById("titulo").value;
 
     // Envía los datos a la API mediante parámetros de ruta.
     // La respuesta se gestiona mediante programación basada en promesas.
     fetch("http://localhost:3000/peliculas/" + tituloEliminar, {
-      method: "DELETE"                                      //--> Parámetro que define el tipo de método http usado.
+      method: "DELETE"                                    //--> Parámetro que define el tipo de método http usado.
     })
-      .then(res => res.text())                              //--> Se gestiona la respuesta como texto plano.
+      .then(res => res.text())                            //--> Se gestiona la respuesta como texto plano.
       .then(data => { alert(data) })
       .catch(error => { console.error(error) });
   });       

@@ -1,5 +1,5 @@
 const http = require("node:http");
-const { servirPaginaAdministrador, agregarPelicula, modificarPelicula, eliminarPelicula } = require("../controllers");
+const { servirDatos, agregarPelicula, modificarPelicula, eliminarPelicula } = require("../controllers");
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -8,12 +8,12 @@ http.createServer((req, res) => {
 
   switch (method) {
     case 'GET':
-      servirPaginaAdministrador(req, res);
+      servirDatos(req, res);
       break;
     case 'POST':
       agregarPelicula(req, res);
       break;
-    case 'PATCH':
+    case 'PUT':
       modificarPelicula(req, res);
       break;
     case 'DELETE':
@@ -24,4 +24,5 @@ http.createServer((req, res) => {
       res.statusCode = 404;
       res.end("Error 404 not found");
   }
+  
 }).listen(PORT, () => console.log(`Servidor en puerto ${PORT} a la escucha...`));

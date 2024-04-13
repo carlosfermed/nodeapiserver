@@ -1,7 +1,11 @@
 const peliculas = require("../data/peliculas");
-const { comprobarDatos } = require("../plugins/comprobarDatos");
+const comprobarDatos = require("../plugins/comprobarDatos");              
 
-let idPeliculas = peliculas.length;                             // Se inicializa el id para tener listo el valor en la siguiente película introducida.               
+const generarId = () => {
+  let maxId = Math.max(...peliculas.map(pelicula => pelicula.id))
+  maxId += 1;
+  return maxId;
+}
 
 const agregarPelicula = (req, res) => {
 
@@ -16,27 +20,34 @@ const agregarPelicula = (req, res) => {
       const peliculaYaExistente = peliculas.find(pelicula => pelicula.titulo == titulo);
 
       if (peliculaYaExistente) {
+        res.statusCode = 409;                                   // Existe conflicto.
         res.setHeader("content-type", "application/json; charset=utf-8");
         res.end(JSON.stringify({ message: "La película ya está registrada." }));
       }
       else if (comprobarDatos(titulo, director, anio)) {
         const nuevaPelicula = {
-          id: ++idPeliculas,
+          id: generarId(),
           titulo,
           director,
           anio
         };
+        
         peliculas.push(nuevaPelicula);
+        res.statusCode = 201;                                   // Nueva entrada creada.
         res.setHeader("content-type", "application/json; charset=utf-8");
         res.end(JSON.stringify({ message: "Película añadida." }));
       }
       else {
+        res.statusCode = 400;                                   // Solicitud incorrecta.
         res.setHeader("content-type", "application/json; charset=utf-8");
         res.end(JSON.stringify({ message: "Datos incorrectos." }));
       }
     }
     catch (err) {
       console.log('err :>> ', err);
+      res.statusCode = 500;                                     // Error interno del servidor.
+      res.setHeader("content-type", "application/json; charset=utf-8");
+      res.end(JSON.stringify({ message: "Error interno del servidor." }));
     }
   }
 }
