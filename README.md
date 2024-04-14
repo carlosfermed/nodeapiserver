@@ -15,4 +15,4 @@ Una vez instalado, puedes ejecutar el servidor usando el comando `npm start`. El
 El servidor está diseñado para ofrecer un acceso rápido y eficiente a los datos de películas mediante el uso de una estrategia de almacenamiento en caché.
 
 ## Estado del proyecto:
-El proyecto está activo y en estado de mejora continua, si tienes alguna sugerencia puedes hacermela llegar.
+El proyecto está activo y en estado de mejora continua en caso de que tengas alguna sugerencia.
