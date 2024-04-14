@@ -1,5 +1,5 @@
 const peliculas = require("../data/peliculas");
-const comprobarDatos = require("../plugins/comprobarDatos");              
+const comprobarDatos = require("../plugins/comprobarDatos");
 
 const generarId = () => {
   let maxId = Math.max(...peliculas.map(pelicula => pelicula.id))
@@ -9,39 +9,47 @@ const generarId = () => {
 
 const agregarPelicula = (req, res) => {
 
-  const url = new URL(req.url, `http://${req.rawHeaders[1]}`);  // Usamos los parámetros query.
-
-  if (url.pathname === '/peliculas') {
+  if (req.url === '/peliculas') {
     try {
-      const titulo = url.searchParams.get("titulo");            // Se recupera el título envíado desde el cliente
-      const director = url.searchParams.get("director");        // Se recupera el director envíado desde el cliente
-      const anio = url.searchParams.get("anio");                // Se recupera el año envíado desde el cliente
+      let body = "";
 
-      const peliculaYaExistente = peliculas.find(pelicula => pelicula.titulo == titulo);
+      // Se usan los eventos 'data' y 'end' para manejar el cuerpo de la petición.
+      req.on("data", (chunk) => {
+        body += chunk;
+      });
 
-      if (peliculaYaExistente) {
-        res.statusCode = 409;                                   // Existe conflicto.
-        res.setHeader("content-type", "application/json; charset=utf-8");
-        res.end(JSON.stringify({ message: "La película ya está registrada." }));
-      }
-      else if (comprobarDatos(titulo, director, anio)) {
-        const nuevaPelicula = {
-          id: generarId(),
-          titulo,
-          director,
-          anio
-        };
-        
-        peliculas.push(nuevaPelicula);
-        res.statusCode = 201;                                   // Nueva entrada creada.
-        res.setHeader("content-type", "application/json; charset=utf-8");
-        res.end(JSON.stringify({ message: "Película añadida." }));
-      }
-      else {
-        res.statusCode = 400;                                   // Solicitud incorrecta.
-        res.setHeader("content-type", "application/json; charset=utf-8");
-        res.end(JSON.stringify({ message: "Datos incorrectos." }));
-      }
+      req.on("end", () => {
+        body = JSON.parse(body);
+        const titulo = body.titulo;
+        const director = body.director;
+        const anio = body.anio;
+
+        const peliculaYaExistente = peliculas.find(pelicula => pelicula.titulo == titulo);
+
+        if (peliculaYaExistente) {
+          res.statusCode = 409;                                   // Existe conflicto.
+          res.setHeader("content-type", "application/json; charset=utf-8");
+          res.end(JSON.stringify({ message: "La película ya está registrada." }));
+        }
+        else if (comprobarDatos(titulo, director, anio)) {
+          const nuevaPelicula = {
+            id: generarId(),
+            titulo,
+            director,
+            anio
+          };
+
+          peliculas.push(nuevaPelicula);
+          res.statusCode = 201;                                   // Nueva entrada creada.
+          res.setHeader("content-type", "application/json; charset=utf-8");
+          res.end(JSON.stringify({ message: "Película añadida." }));
+        }
+        else {
+          res.statusCode = 400;                                   // Solicitud incorrecta.
+          res.setHeader("content-type", "application/json; charset=utf-8");
+          res.end(JSON.stringify({ message: "Datos incorrectos." }));
+        }
+      })
     }
     catch (err) {
       console.log('err :>> ', err);

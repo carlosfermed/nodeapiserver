@@ -76,7 +76,7 @@
   </div>
 </body>
 <script>
-
+  // ___POST___
   document.getElementById("movieForm").addEventListener("submit", async function (e) {
     e.preventDefault();                                   //--> Evita el comportamiento por defecto que provocaría el envío automático del formulario.
 
@@ -86,10 +86,11 @@
     const anio = document.getElementById("anio").value;
 
     try {
-      // Envía los datos a la API mediante parámetros query de forma asíncrona.
+      // Envía los datos a la API usando el cuerpo de la petición.
       // La respuesta se gestiona mediante async/await.
-      const response = await fetch("http://localhost:3000/peliculas?titulo=" + titulo + "&director=" + director + "&anio=" + anio, {
-        method: "POST"                                    //--> Parámetro que define el tipo de método http usado.
+      const response = await fetch("http://localhost:3000/peliculas", {
+        method: "POST",  
+        body: JSON.stringify({titulo, director, anio})
       })
       const data = await response.json()                  //--> Se gestiona la respuesta en formato json.
       alert(data.message);                                //--> Se usa el atributo 'message' del objeto enviado como respuesta.
@@ -99,6 +100,7 @@
     }
   });
 
+  // ___PUT___
   document.getElementById("botonModificar").addEventListener("click", async function () {
     // Recupera los valores del formulario. 
     const titulo = document.getElementById("titulo").value;
@@ -117,6 +119,7 @@
     }
   });
 
+  // ___DELETE___
   document.getElementById("botonEliminar").addEventListener("click", () => {
     // Recupera el valor título del formulario.
     const tituloEliminar = document.getElementById("titulo").value;
